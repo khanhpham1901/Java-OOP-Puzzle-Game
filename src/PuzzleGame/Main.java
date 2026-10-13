@@ -1,38 +1,28 @@
 package PuzzleGame;
 
-import PuzzleGame.map.Map;
-import PuzzleGame.map.Tile;
-import PuzzleGame.objects.Box;
-import PuzzleGame.objects.Switch;
-import PuzzleGame.player.Direction;
-import PuzzleGame.player.Player;
+import PuzzleGame.ui.GamePanel;
+import javax.swing.JFrame;
 
-public class Main
-{
-    public static void main(String[] args)
-    {
-        Map map = new Map(5, 5);
+public class Main {
+    public static void main(String[] args) {
+        // Tạo cửa sổ game (Frame)
+        JFrame window = new JFrame();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setTitle("Puzzle Game - PTIT OOP");
 
-        for (int y = 0; y < 5; y++)
-        {
-            for (int x = 0; x < 5; x++)
-            {
-                map.setTile(x, y, new Tile(true));
-            }
-        }
+        // Khởi tạo GamePanel (Nơi chứa Map và giao diện)
+        GamePanel gamePanel = new GamePanel();
+        window.add(gamePanel);
 
-        Player player = new Player(1, 1);
-        Box box = new Box(2, 1);
-        Switch switchObject = new Switch(3, 1);
+        // Tự động căn chỉnh kích thước cửa sổ vừa khít với GamePanel
+        window.pack(); 
 
-        System.out.println(switchObject.isActive());
+        // Hiển thị cửa sổ ở chính giữa màn hình
+        window.setLocationRelativeTo(null); 
+        window.setVisible(true);
 
-        boolean pushed = box.push(player, Direction.RIGHT, map);
-
-        switchObject.check(box);
-
-        System.out.println(pushed);
-        System.out.println(box.getX() + " " + box.getY());
-        System.out.println(switchObject.isActive());
+        // Bắt đầu chạy vòng lặp game (Game Loop)
+        gamePanel.startGameThread();
     }
 }

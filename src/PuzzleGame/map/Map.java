@@ -1,80 +1,84 @@
 package PuzzleGame.map;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
-import PuzzleGame.objects.Box;
+public class Map {
+    private Tile[][] grid; 
+    private int rows;
+    private int cols;
+    private int tileSize; 
 
-public class Map
-{
-    private Tile[][] tiles;
-    private int width;
-    private int height;
-    private List<Box> boxes;
+    // Biến lưu trữ hình ảnh
+    private BufferedImage imageFloor;
+    private BufferedImage imageWall;
 
-    public Map(int width, int height)
-    {
-        this.width = width;
-        this.height = height;
-        this.tiles = new Tile[height][width];
-        this.boxes = new ArrayList<>();
+    public Map(int rows, int cols, int tileSize) {
+        this.rows = rows;
+        this.cols = cols;
+        this.tileSize = tileSize;
+        this.grid = new Tile[rows][cols];
+        
+        loadImages();
     }
 
-    public boolean isWalkable(int x, int y)
-    {
-        if (x < 0 || x >= width || y < 0 || y >= height)
-        {
-            return false;
+    // Hàm đọc file ảnh từ thư mục assets
+    private void loadImages() {
+        try {
+            // Sử dụng đường dẫn tương đối tới thư mục assets của bạn
+            // Dựa vào file tree, có vẻ bạn đổi tên floor thành tile.png
+            imageFloor = ImageIO.read(new File("assets/images/map/tile.png"));
+            imageWall = ImageIO.read(new File("assets/images/map/wall.png"));
+        } catch (IOException e) {
+            System.out.println("Lỗi: Không tìm thấy file ảnh Map trong thư mục assets/images/map/");
+            e.printStackTrace();
         }
-
-        return tiles[y][x] != null && tiles[y][x].isWalkable();
     }
 
-    public boolean hasBox(int x, int y)
-    {
-        for (Box box : boxes)
-        {
-            if (box.getX() == x && box.getY() == y)
-            {
-                return true;
+    // Getter cho Người 2 (Player) gọi để kiểm tra va chạm
+    public Tile getTile(int row, int col) {
+        if (row < 0 || row >= rows || col < 0 || col >= cols) {
+            return null; // Tránh lỗi vượt quá giới hạn mảng
+        }
+        return grid[row][col];
+    }
+
+    public int getTileSize() {
+        return tileSize;
+    }
+
+    // Load dữ liệu map từ mảng 2D (Người 5 sẽ truyền vào)
+    public void loadMapData(int[][] levelData) {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                grid[r][c] = new Tile(levelData[r][c]);
             }
         }
-
-        return false;
     }
 
-    public void addBox(Box box)
-    {
-        boxes.add(box);
-    }
+    // Hàm vẽ bản đồ ra màn hình
+    public void draw(Graphics2D g2) {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == null) continue;
 
-    public Tile getTile(int x, int y)
-    {
-        if (x < 0 || x >= width || y < 0 || y >= height)
-        {
-            return null;
+                int x = c * tileSize;
+                int y = r * tileSize;
+
+                // Tự động scale ảnh vừa với tileSize
+                if (grid[r][c].type == 1) {
+                    if (imageWall != null) {
+                        g2.drawImage(imageWall, x, y, tileSize, tileSize, null);
+                    }
+                } else { // type == 0
+                    if (imageFloor != null) {
+                        g2.drawImage(imageFloor, x, y, tileSize, tileSize, null);
+                    }
+                }
+            }
         }
-
-        return tiles[y][x];
-    }
-
-    public void setTile(int x, int y, Tile tile)
-    {
-        if (x < 0 || x >= width || y < 0 || y >= height)
-        {
-            return;
-        }
-
-        tiles[y][x] = tile;
-    }
-
-    public int getWidth()
-    {
-        return width;
-    }
-
-    public int getHeight()
-    {
-        return height;
     }
 }

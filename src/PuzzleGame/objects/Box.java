@@ -4,78 +4,39 @@ import PuzzleGame.map.Map;
 import PuzzleGame.player.Direction;
 import PuzzleGame.player.Player;
 
-public class Box extends GameObject
-{
-    public Box(int x, int y)
-    {
-        super(x, y);
+public class Box {
+    private int x;
+    private int y;
+
+    // Constructor public
+    public Box(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public boolean push(Player player, Direction direction, Map map)
-    {
-        int newX = x;
-        int newY = y;
+    // Các hàm Get/Set tọa độ
+    public int getX() { 
+        return x; 
+    }
+    
+    public int getY() { 
+        return y; 
+    }
+    
+    public void setX(int x) { 
+        this.x = x; 
+    }
+    
+    public void setY(int y) { 
+        this.y = y; 
+    }
 
-        switch (direction)
-        {
-            case UP:
-                newY--;
-                break;
-
-            case DOWN:
-                newY++;
-                break;
-
-            case LEFT:
-                newX--;
-                break;
-
-            case RIGHT:
-                newX++;
-                break;
-        }
-
-        int playerX = x;
-        int playerY = y;
-
-        switch (direction)
-        {
-            case UP:
-                playerY++;
-                break;
-
-            case DOWN:
-                playerY--;
-                break;
-
-            case LEFT:
-                playerX++;
-                break;
-
-            case RIGHT:
-                playerX--;
-                break;
-        }
-
-        if (player.getX() != playerX || player.getY() != playerY)
-        {
-            return false;
-        }
-
-        if (!map.isWalkable(newX, newY))
-        {
-            return false;
-        }
-
-        int oldX = x;
-        int oldY = y;
-
-        x = newX;
-        y = newY;
-
-        player.setPosition(oldX, oldY);
-        player.setDirection(direction);
-
-        return true;
+    // --- CÁC HÀM PLACEHOLDER CHO NGƯỜI 3 LÀM LOGIC ---
+    
+    // Hàm xử lý đẩy hộp (Dựa theo logic code cũ của nhóm)
+    public boolean push(Player player, Direction direction, Map map) {
+        // TODO (Người 3): Viết logic check đẩy hộp ở đây
+        // Trả về true nếu đẩy thành công, false nếu bị kẹt tường
+        return false; 
     }
 }
