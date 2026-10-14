@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -63,14 +64,15 @@ public class GamePanel extends JPanel implements Runnable {
         
         map = new Map(maxScreenRow, maxScreenCol, tileSize);
         
+        // Level thiết kế theo phong cách Sokoban
         int[][] testLevel = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            {1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1},
-            {1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1},
-            {1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1},
-            {1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1},
+            {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1},
+            {1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1},
+            {1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1},
+            {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
@@ -119,12 +121,19 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
+        // Cập nhật UI animations (nhấp nháy text, ngôi sao...)
+        ui.update();
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        // Bật anti-aliasing cho chất lượng render tốt hơn
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
         if (gameState == titleState) {
             ui.draw(g2); // Chỉ vẽ Menu
